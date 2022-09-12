@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import HomeIcon from "@mui/icons-material/Home";
 import ExploreOutlinedIcon from "@mui/icons-material/ExploreOutlined";
@@ -6,175 +7,180 @@ import SubscriptionsOutlinedIcon from "@mui/icons-material/SubscriptionsOutlined
 import VideoLibraryOutlinedIcon from "@mui/icons-material/VideoLibraryOutlined";
 import HistoryOutlinedIcon from "@mui/icons-material/HistoryOutlined";
 import LibraryMusicOutlinedIcon from "@mui/icons-material/LibraryMusicOutlined";
-import SportsBasketballOutlinedIcon from "@mui/icons-material/SportsBasketballOutlined";
 import SportsEsportsOutlinedIcon from "@mui/icons-material/SportsEsportsOutlined";
-import MovieCreationOutlinedIcon from "@mui/icons-material/MovieCreationOutlined";
+import SportsBasketballOutlinedIcon from "@mui/icons-material/SportsBasketballOutlined";
+import MovieOutlinedIcon from "@mui/icons-material/MovieOutlined";
 import ArticleOutlinedIcon from "@mui/icons-material/ArticleOutlined";
 import LiveTvOutlinedIcon from "@mui/icons-material/LiveTvOutlined";
+import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import FlagOutlinedIcon from "@mui/icons-material/FlagOutlined";
 import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 import SettingsBrightnessOutlinedIcon from "@mui/icons-material/SettingsBrightnessOutlined";
 
 import logo from "../assets/images/logo.png";
-import { AccountCircleOutlined } from "@mui/icons-material";
 
 const Container = styled.div`
-  flex: 1.4;
-  background-color: ${({ theme }) => theme.menuBgColor};
+  flex: 1.2;
+  background-color: ${({ theme }) => theme.backgroundLighter};
   height: 100vh;
   color: ${({ theme }) => theme.textColor};
   font-size: 14px;
   position: sticky;
-  top: 0px;
-  scroll-behavior: smooth;
+  top: 0;
   overflow: scroll;
 `;
 
 const Wrapper = styled.div`
-  padding: 18px 26px;
+  padding: 16px 24px;
 `;
 
 const Logo = styled.div`
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 6px;
   font-weight: bold;
   cursor: pointer;
-  margin-bottom: 25px;
+  margin-bottom: 24px;
 `;
 
-const Image = styled.img`
-  height: 25px;
+const Img = styled.img`
+  height: 24px;
 `;
 
-const MenuItem = styled.div`
+const Item = styled.div`
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 20px;
   cursor: pointer;
-  padding: 8px 0px;
+  padding: 12px 8px;
+  width: 100%;
+  &:hover {
+    background-color: ${({ theme }) => theme.soft};
+  }
 `;
 
-const Divider = styled.hr`
+const HorizontalLine = styled.hr`
   margin: 16px 0px;
-  border: 0.5px solid ${({ theme }) => theme.lineDividerColor};
+  border: 0.5px solid ${({ theme }) => theme.horizontalLineColor};
 `;
 
-const SectionTitle = styled.h2`
-  color: ${({ theme }) => theme.textSoftColor};
+const Title = styled.div`
   font-size: 14px;
   font-weight: 500;
-  margin-bottom: 20px;
+  color: #aaaaaa;
+  margin-bottom: 16px;
 `;
 
-const LoginSection = styled.div``;
-const LoginButton = styled.button`
+const Login = styled.div``;
+
+const Button = styled.button`
   padding: 6px 16px;
-  background-color: transparent;
-  outline: none;
-  border: 1px solid #339bf7;
   color: #3ea6ff;
-  border-radius: 3px;
-  font-weight: 600;
-  margin-top: 10px;
+  border: 1px solid #3ea6ff;
+  background-color: transparent;
+  border-radius: 4px;
+  margin-top: 12px;
   cursor: pointer;
+  gap: 6px;
+  display: flex;
+  align-content: center;
+`;
+
+const Text = styled.h4`
   display: flex;
   align-items: center;
-  gap: 6px;
+  font-weight: 500;
+  margin-top: 4px;
 `;
 
 const Menu = ({ darkMode, setDarkMode }) => {
   return (
     <Container>
       <Wrapper>
-        {/* Logo with Name */}
-        <Logo>
-          <Image src={logo}></Image>
-          Youtube
-        </Logo>
+        <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
+          <Logo>
+            <Img src={logo} />
+            YouTube
+          </Logo>
+        </Link>
         {/* Menu Items */}
-        {/* Section 1 */}
-        <MenuItem>
-          <HomeIcon />
-          Home
-        </MenuItem>
-        <MenuItem>
+        <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
+          <Item>
+            <HomeIcon />
+            Home
+          </Item>
+        </Link>
+        <Item>
           <ExploreOutlinedIcon />
           Explore
-        </MenuItem>
-        <MenuItem>
+        </Item>
+        <Item>
           <SubscriptionsOutlinedIcon />
-          Subscription
-        </MenuItem>
-        <Divider />
-
-        {/* Section 2 */}
-        <MenuItem>
+          Subscriptions
+        </Item>
+        <HorizontalLine />
+        <Item>
           <VideoLibraryOutlinedIcon />
-          Library
-        </MenuItem>
-        <MenuItem>
+          Libary
+        </Item>
+        <Item>
           <HistoryOutlinedIcon />
           History
-        </MenuItem>
-        <Divider />
-
-        {/* Section 3 */}
-        <LoginSection>
-          Sign in to like videos, comment and subscribe.
-          <LoginButton>
-            <AccountCircleOutlined />
-            SIGN IN
-          </LoginButton>
-        </LoginSection>
-        <Divider />
-
-        {/* Section 4 */}
-        <SectionTitle>Best of Youtube</SectionTitle>
-        <MenuItem>
+        </Item>
+        <HorizontalLine />
+        <Login>
+          Sign in to like videos, comment, and subscribe.
+          <Link to="/login" style={{ textDecoration: "none" }}>
+            <Button>
+              <AccountCircleOutlinedIcon />
+              <Text>SIGN IN</Text>
+            </Button>
+          </Link>
+        </Login>
+        <HorizontalLine />
+        <Title>BEST OF YOUTUBE</Title>
+        <Item>
           <LibraryMusicOutlinedIcon />
           Music
-        </MenuItem>
-        <MenuItem>
+        </Item>
+        <Item>
           <SportsBasketballOutlinedIcon />
           Sports
-        </MenuItem>
-        <MenuItem>
+        </Item>
+        <Item>
           <SportsEsportsOutlinedIcon />
           Gaming
-        </MenuItem>
-        <MenuItem>
-          <MovieCreationOutlinedIcon />
+        </Item>
+        <Item>
+          <MovieOutlinedIcon />
           Movies
-        </MenuItem>
-        <MenuItem>
+        </Item>
+        <Item>
           <ArticleOutlinedIcon />
           News
-        </MenuItem>
-        <MenuItem>
+        </Item>
+        <Item>
           <LiveTvOutlinedIcon />
           Live
-        </MenuItem>
-        <Divider />
-
-        {/* Section 5 */}
-        <MenuItem>
+        </Item>
+        <HorizontalLine />
+        <Item>
           <SettingsOutlinedIcon />
           Settings
-        </MenuItem>
-        <MenuItem>
+        </Item>
+        <Item>
           <FlagOutlinedIcon />
           Report
-        </MenuItem>
-        <MenuItem>
+        </Item>
+        <Item>
           <HelpOutlineOutlinedIcon />
           Help
-        </MenuItem>
-        <MenuItem onClick={() => setDarkMode((prevState) => !prevState)}>
+        </Item>
+        <Item onClick={() => setDarkMode((prevState) => !prevState)}>
           <SettingsBrightnessOutlinedIcon />
-          Light Mode
-        </MenuItem>
+          {darkMode ? "Dark" : "Light"} Mode
+        </Item>
       </Wrapper>
     </Container>
   );

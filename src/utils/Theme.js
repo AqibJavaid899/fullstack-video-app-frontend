@@ -1,15 +1,14 @@
-export const darkThemeMode = {
-  bodyBgColor: "#181818",
-  menuBgColor: "#202020",
+export const darkTheme = {
+  background: "#181818",
+  backgroundLighter: "#202020",
   textColor: "white",
-  textSoftColor: "#aaaaaa",
-  lineDividerColor: "#373737",
+  horizontalLineColor: "#aaaaaa",
+  soft: "#373737",
 };
-
-export const lightThemeMode = {
-  bodyBgColor: "#f9f9f9",
-  menuBgColor: "white",
+export const lightTheme = {
+  background: "#f9f9f9",
+  backgroundLighter: "white",
   textColor: "black",
-  textSoftColor: "#606060",
-  lineDividerColor: "#f5f5f5",
+  horizontalLineColor: "#606060",
+  soft: "#f5f5f5",
 };

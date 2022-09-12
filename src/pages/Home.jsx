@@ -1,29 +1,27 @@
+import React from "react";
 import styled from "styled-components";
 
-import Card from "../components/Card";
+import VideoCard from "../components/VideoCard";
 
 const Container = styled.div`
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
   flex-wrap: wrap;
-  gap: 8px;
 `;
 
 const Home = () => {
   return (
     <Container>
-      <Card />
-      <Card />
-      <Card />
-      <Card />
-      <Card />
-      <Card />
-      <Card />
-      <Card />
-      <Card />
-      <Card />
-      <Card />
+      <VideoCard />
+      <VideoCard />
+      <VideoCard />
+      <VideoCard />
+      <VideoCard />
+      <VideoCard />
+      <VideoCard />
+      <VideoCard />
+      <VideoCard />
     </Container>
   );
 };

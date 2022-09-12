@@ -1,11 +1,13 @@
-import { AccountCircleOutlined, SearchOutlined } from "@mui/icons-material";
 import React from "react";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
+import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
+import SearchOutlined from "@mui/icons-material/SearchOutlined";
 
 const Container = styled.div`
-  background-color: ${({ theme }) => theme.menuBgColor};
   position: sticky;
-  top: 0;
+  top: 0px;
+  background-color: ${({ theme }) => theme.backgroundLighter};
   height: 56px;
 `;
 
@@ -13,71 +15,69 @@ const Wrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  height: 100%;
   padding: 0px 20px;
+  height: 100%;
   position: relative;
 `;
 
-const SearchComponent = styled.div`
+const SearchContainer = styled.div`
   position: absolute;
-  width: 48%;
   left: 0px;
   right: 0px;
   margin: auto;
-  border: 0.5px solid #ccc;
-  border-radius: 3px;
-  padding: 0px;
   display: flex;
+  align-items: center;
   justify-content: space-between;
+  width: 38%;
+  border: 1px solid #ccc;
+  padding: 5px;
+  border-radius: 16px;
+  padding: 5px 20px;
 `;
 
-const InputComponent = styled.input`
+const Input = styled.input`
+  border: none;
   flex: 1;
-  border: none;
-  outline: none;
   background-color: transparent;
-  padding: 0px 8px;
-  color: ${({ theme }) => theme.textSoftColor};
+  text-decoration: none;
+  outline: none;
+  color: ${({ theme }) => theme.textColor};
 `;
 
-const SearchButton = styled.button`
-  padding: 6px 20px;
-  border: none;
+const Button = styled.button`
+  padding: 6px 16px;
+  color: #3ea6ff;
+  border: 1px solid #3ea6ff;
   background-color: transparent;
+  border-radius: 4px;
   cursor: pointer;
-  background-color: #c9c6c6;
+  gap: 6px;
   display: flex;
   align-content: center;
 `;
 
-const LoginButton = styled.button`
-  padding: 6px 16px;
-  background-color: transparent;
-  outline: none;
-  border: 1px solid #339bf7;
-  color: #3ea6ff;
-  border-radius: 3px;
-  font-weight: 600;
-  cursor: pointer;
+const Text = styled.h4`
   display: flex;
   align-items: center;
-  gap: 6px;
+  font-weight: 500;
+  margin-top: 4px;
 `;
 
 const Navbar = () => {
   return (
     <Container>
       <Wrapper>
-        <SearchComponent>
-          <InputComponent placeholder="Search" />
-          <SearchButton>
-            <SearchOutlined />
-          </SearchButton>
-        </SearchComponent>
-        <LoginButton>
-          <AccountCircleOutlined />
-          SIGN IN
-        </LoginButton>
+        <SearchContainer>
+          <Input placeholder="Search" />
+          <SearchOutlined />
+        </SearchContainer>
+
+        <Link to="/login" style={{ textDecoration: "none" }}>
+          <Button>
+            <AccountCircleOutlinedIcon />
+            <Text>SIGN IN</Text>
+          </Button>
+        </Link>
       </Wrapper>
     </Container>
   );
