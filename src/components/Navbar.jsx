@@ -3,6 +3,8 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import SearchOutlined from "@mui/icons-material/SearchOutlined";
+import VideoCallOutlinedIcon from "@mui/icons-material/VideoCallOutlined";
+import { useSelector } from "react-redux";
 
 const Container = styled.div`
   position: sticky;
@@ -35,6 +37,22 @@ const SearchContainer = styled.div`
   padding: 5px 20px;
 `;
 
+const UserDetails = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 500;
+  color: ${({ theme }) => theme.textColor};
+`;
+
+const Avatar = styled.img`
+  height: 32px;
+  width: 32px;
+  border-radius: 50%;
+  background-color: #999;
+  cursor: pointer;
+`;
+
 const Input = styled.input`
   border: none;
   flex: 1;
@@ -64,6 +82,8 @@ const Text = styled.h4`
 `;
 
 const Navbar = () => {
+  const { currentUser } = useSelector((state) => state.user);
+
   return (
     <Container>
       <Wrapper>
@@ -72,12 +92,20 @@ const Navbar = () => {
           <SearchOutlined />
         </SearchContainer>
 
-        <Link to="/login" style={{ textDecoration: "none" }}>
-          <Button>
-            <AccountCircleOutlinedIcon />
-            <Text>SIGN IN</Text>
-          </Button>
-        </Link>
+        {currentUser?._id ? (
+          <UserDetails>
+            <VideoCallOutlinedIcon />
+            <Avatar />
+            {currentUser?.name}
+          </UserDetails>
+        ) : (
+          <Link to="/login" style={{ textDecoration: "none" }}>
+            <Button>
+              <AccountCircleOutlinedIcon />
+              <Text>SIGN IN</Text>
+            </Button>
+          </Link>
+        )}
       </Wrapper>
     </Container>
   );

@@ -1,6 +1,8 @@
-import React from "react";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { format } from "timeago.js";
 
 const Container = styled.div`
   width: ${(props) => props.cardSize !== "small" && "360px"};
@@ -55,28 +57,32 @@ const VideoAnalytics = styled.p`
   margin-top: 4px;
 `;
 
-const VideoCard = ({ cardSize }) => {
+const VideoCard = ({ cardSize, video }) => {
+  const [channel, setChannel] = useState({});
+
+  useEffect(() => {
+    const fetchChannel = async () => {
+      const payload = await axios.get(`/users/get/${video.userId}`);
+      setChannel(payload.data);
+      console.log("Channel Payload received is : ", payload.data);
+    };
+
+    fetchChannel();
+  }, [video.userId]);
+
   return (
     <Link to="/video/test" style={{ textDecoration: "none", color: "inherit" }}>
       <Container cardSize={cardSize}>
-        <Image
-          cardSize={cardSize}
-          src="https://cdn.pixabay.com/photo/2017/12/15/13/51/polynesia-3021072__480.jpg"
-        />
+        <Image cardSize={cardSize} src={video.imgUrl} />
         {/* Details */}
         <VideoDetails cardSize={cardSize}>
           {/* Channel Image */}
-          <ChannelImage
-            cardSize={cardSize}
-            src="https://cdn.pixabay.com/photo/2020/04/10/12/26/nature-5025558__480.jpg"
-          />
+          <ChannelImage cardSize={cardSize} src={channel.img} />
           <VideoText>
-            <TitleText cardSize={cardSize}>
-              To create a prod build, use yarn run build command...
-            </TitleText>
-            <ChannelName cardSize={cardSize}>Aqib Javaid</ChannelName>
+            <TitleText cardSize={cardSize}>{video.title}</TitleText>
+            <ChannelName cardSize={cardSize}>{channel.name}</ChannelName>
             <VideoAnalytics cardSize={cardSize}>
-              120K • 1 day ago
+              {video.views} • {format(video.createdAt)}
             </VideoAnalytics>
           </VideoText>
         </VideoDetails>

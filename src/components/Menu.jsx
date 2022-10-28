@@ -19,6 +19,7 @@ import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 import SettingsBrightnessOutlinedIcon from "@mui/icons-material/SettingsBrightnessOutlined";
 
 import logo from "../assets/images/logo.png";
+import { useSelector } from "react-redux";
 
 const Container = styled.div`
   flex: 1.2;
@@ -95,6 +96,8 @@ const Text = styled.h4`
 `;
 
 const Menu = ({ darkMode, setDarkMode }) => {
+  const { currentUser } = useSelector((state) => state.user);
+
   return (
     <Container>
       <Wrapper>
@@ -111,14 +114,24 @@ const Menu = ({ darkMode, setDarkMode }) => {
             Home
           </Item>
         </Link>
-        <Item>
-          <ExploreOutlinedIcon />
-          Explore
-        </Item>
-        <Item>
-          <SubscriptionsOutlinedIcon />
-          Subscriptions
-        </Item>
+        <Link
+          to="/trending"
+          style={{ textDecoration: "none", color: "inherit" }}
+        >
+          <Item>
+            <ExploreOutlinedIcon />
+            Explore
+          </Item>
+        </Link>
+        <Link
+          to="/subscription"
+          style={{ textDecoration: "none", color: "inherit" }}
+        >
+          <Item>
+            <SubscriptionsOutlinedIcon />
+            Subscriptions
+          </Item>
+        </Link>
         <HorizontalLine />
         <Item>
           <VideoLibraryOutlinedIcon />
@@ -129,16 +142,20 @@ const Menu = ({ darkMode, setDarkMode }) => {
           History
         </Item>
         <HorizontalLine />
-        <Login>
-          Sign in to like videos, comment, and subscribe.
-          <Link to="/login" style={{ textDecoration: "none" }}>
-            <Button>
-              <AccountCircleOutlinedIcon />
-              <Text>SIGN IN</Text>
-            </Button>
-          </Link>
-        </Login>
-        <HorizontalLine />
+        {!currentUser && (
+          <>
+            <Login>
+              Sign in to like videos, comment, and subscribe.
+              <Link to="/login" style={{ textDecoration: "none" }}>
+                <Button>
+                  <AccountCircleOutlinedIcon />
+                  <Text>SIGN IN</Text>
+                </Button>
+              </Link>
+            </Login>
+            <HorizontalLine />
+          </>
+        )}
         <Title>BEST OF YOUTUBE</Title>
         <Item>
           <LibraryMusicOutlinedIcon />
