@@ -1,5 +1,10 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
+import { format } from "timeago.js";
 import styled from "styled-components";
+
 import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
 import ThumbDownOffAltOutlinedIcon from "@mui/icons-material/ThumbDownOffAltOutlined";
 import ReplyOutlinedIcon from "@mui/icons-material/ReplyOutlined";
@@ -7,6 +12,15 @@ import AddTaskOutlinedIcon from "@mui/icons-material/AddTaskOutlined";
 
 import CommentSection from "../components/CommentSection";
 import VideoCard from "../components/VideoCard";
+import {
+  fetchVideoFailure,
+  fetchVideoStart,
+  fetchVideoSuccess,
+  incrementDislikeCount,
+  incrementLikeCount,
+} from "../redux/slices/videoSlice";
+import { ThumbDown, ThumbUp } from "@mui/icons-material";
+import { userSubscription } from "../redux/slices/userSlice";
 
 const Container = styled.div`
   display: flex;
@@ -16,6 +30,12 @@ const Container = styled.div`
 
 const VideoSection = styled.div`
   flex: 5;
+`;
+
+const VideoFrame = styled.video`
+  max-height: 720px;
+  width: 100%;
+  object-fit: contain;
 `;
 
 const VideoDetails = styled.div`
@@ -125,33 +145,80 @@ const RecommendationSection = styled.div`
 `;
 
 const Video = () => {
+  const [channel, setChannel] = useState({});
+
+  const { currentUser } = useSelector((state) => state.user);
+  const { currentVideo } = useSelector((state) => state.video);
+
+  const dispatch = useDispatch();
+
+  // Fetching the Link using useLocation() Hook
+  const videoLink = useLocation().pathname.split("/")[2];
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        dispatch(fetchVideoStart());
+        const videoData = await axios.get(`/videos/get/${videoLink}`);
+        const channelData = await axios.get(
+          `/users/get/${videoData.data.userId}`
+        );
+        dispatch(fetchVideoSuccess(videoData.data));
+        setChannel(channelData.data);
+      } catch (error) {
+        dispatch(fetchVideoFailure());
+      }
+    };
+    fetchData();
+  }, [videoLink, dispatch]);
+
+  const handleLikeButtonClick = async () => {
+    await axios.put(`/users/like/${currentVideo._id}`);
+    dispatch(incrementLikeCount(currentUser._id));
+  };
+
+  const handleDislikeButtonClick = async () => {
+    await axios.put(`/users/dislike/${currentVideo._id}`);
+    dispatch(incrementDislikeCount(currentUser._id));
+  };
+
+  const handleSubscription = async () => {
+    currentUser.subscribedUsers.includes(currentVideo.userId)
+      ? await axios.put(`/users/unsubscribe/${currentVideo.userId}`)
+      : await axios.put(`/users/subscribe/${currentVideo.userId}`);
+    const channelData = await axios.get(`/users/get/${currentVideo.userId}`);
+    setChannel(channelData.data);
+    dispatch(userSubscription(currentVideo.userId));
+  };
+
   return (
     <Container>
       <VideoSection>
-        <iframe
-          width="100%"
-          height="540px"
-          src="https://www.youtube.com/embed/k3Vfj-e1Ma4"
-          title="YouTube video player"
-          frameborder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowfullscreen
-        ></iframe>
+        <VideoFrame src={currentVideo.videoUrl} />
         {/* Video Details */}
         <VideoDetails>
-          <VideoTitle>
-            React Node.js Video Sharing App Full Tutorial (Redux, JWT, Cookies)
-            | MERN Stack Youtube Clone
-          </VideoTitle>
+          <VideoTitle>{currentVideo.title}</VideoTitle>
           {/* Analytics + Buttons */}
           <VideoInfo>
-            <VideoAnalytics>7,948,154 views • Jun 22, 2022</VideoAnalytics>
+            <VideoAnalytics>
+              {currentVideo.views} views • {format(currentVideo.createdAt)}
+            </VideoAnalytics>
             <VideoButtons>
-              <VideoButton>
-                <ThumbUpOutlinedIcon /> 123
+              <VideoButton onClick={() => handleLikeButtonClick()}>
+                {currentVideo.likes?.includes(currentUser?._id) ? (
+                  <ThumbUp />
+                ) : (
+                  <ThumbUpOutlinedIcon />
+                )}{" "}
+                {currentVideo.likes?.length}
               </VideoButton>
-              <VideoButton>
-                <ThumbDownOffAltOutlinedIcon /> Dislike
+              <VideoButton onClick={() => handleDislikeButtonClick()}>
+                {currentVideo.dislikes?.includes(currentUser?._id) ? (
+                  <ThumbDown />
+                ) : (
+                  <ThumbDownOffAltOutlinedIcon />
+                )}{" "}
+                Dislike
               </VideoButton>
               <VideoButton>
                 <ReplyOutlinedIcon /> Share
@@ -167,29 +234,31 @@ const Video = () => {
         <ChannelDetails>
           <ChannelSubscribeSection>
             <SubscriptionDetails>
-              <ChannelImage src="https://cdn.pixabay.com/photo/2017/12/15/13/51/polynesia-3021072__480.jpg" />
+              <ChannelImage src={channel.img} />
               <ChannelInfo>
-                <ChannelName>Lama Dev</ChannelName>
-                <SubscriptionCount>200K subscribers</SubscriptionCount>
+                <ChannelName>{channel.name}</ChannelName>
+                <SubscriptionCount>
+                  {channel.subscribers} subscribers
+                </SubscriptionCount>
               </ChannelInfo>
             </SubscriptionDetails>
             {/* Subscription Button */}
-            <SubscriptionButton>SUBSCRIBE</SubscriptionButton>
+            <SubscriptionButton onClick={() => handleSubscription()}>
+              {currentUser.subscribedUsers.includes(currentVideo.userId)
+                ? "SUBSCRIBED"
+                : "SUBSCRIBE"}
+            </SubscriptionButton>
           </ChannelSubscribeSection>
         </ChannelDetails>
         {/* Video Description */}
-        <VideoDescription>
-          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Doloribus
-          laborum delectus unde quaerat dolore culpa sit aliquam at. Vitae
-          facere ipsum totam ratione exercitationem. Suscipit animi accusantium
-          dolores ipsam ut.
-        </VideoDescription>
+        <VideoDescription>{currentVideo.desc}</VideoDescription>
         <HorizontalLine />
 
         {/* Comments Section */}
         <CommentSection />
       </VideoSection>
       <RecommendationSection>
+        {/*
         <VideoCard cardSize="small" />
         <VideoCard cardSize="small" />
         <VideoCard cardSize="small" />
@@ -202,6 +271,7 @@ const Video = () => {
         <VideoCard cardSize="small" />
         <VideoCard cardSize="small" />
         <VideoCard cardSize="small" />
+        */}
       </RecommendationSection>
     </Container>
   );

@@ -2,6 +2,9 @@ import axios from "axios";
 import { useState } from "react";
 import styled from "styled-components";
 import { useDispatch } from "react-redux";
+import { signInWithPopup } from "firebase/auth";
+
+import { auth, provider } from "../firebase";
 
 import {
   loginFailure,
@@ -110,6 +113,25 @@ const Login = () => {
     }
   };
 
+  const handleGoogleLogin = () => {
+    dispatch(loginStart());
+    signInWithPopup(auth, provider)
+      .then((response) => {
+        axios
+          .post("auth/google", {
+            name: response?.user?.displayName,
+            email: response?.user?.email,
+            img: response?.user?.photoURL,
+          })
+          .then((result) => {
+            dispatch(loginSuccess(result.data));
+          });
+      })
+      .catch((error) => {
+        dispatch(loginFailure());
+      });
+  };
+
   return (
     <Container>
       <Wrapper>
@@ -117,16 +139,16 @@ const Login = () => {
         <Subtitle>to continue to YouTube</Subtitle>
         <Input
           placeholder="username"
-          value={name}
           onChange={(e) => setName(e.target.value)}
         />
         <Input
           type="password"
           placeholder="password"
-          value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
         <Button onClick={(e) => handleLogin(e)}>Sign In</Button>
+        <Title>or</Title>
+        <Button onClick={() => handleGoogleLogin()}>Sign In with Google</Button>
         <Title>or</Title>
         <Input
           placeholder="username"

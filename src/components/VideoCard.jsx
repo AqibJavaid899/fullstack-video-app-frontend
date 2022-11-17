@@ -64,14 +64,15 @@ const VideoCard = ({ cardSize, video }) => {
     const fetchChannel = async () => {
       const payload = await axios.get(`/users/get/${video.userId}`);
       setChannel(payload.data);
-      console.log("Channel Payload received is : ", payload.data);
     };
-
     fetchChannel();
   }, [video.userId]);
 
   return (
-    <Link to="/video/test" style={{ textDecoration: "none", color: "inherit" }}>
+    <Link
+      to={`/video/${video._id}`}
+      style={{ textDecoration: "none", color: "inherit" }}
+    >
       <Container cardSize={cardSize}>
         <Image cardSize={cardSize} src={video.imgUrl} />
         {/* Details */}
